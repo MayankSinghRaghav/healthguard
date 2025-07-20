@@ -1,13 +1,12 @@
+streamlit==1.35.0
+torch==2.2.2
+torchvision==0.17.2
+transformers==4.41.2
 fastapi==0.110.2
 uvicorn==0.29.0
-streamlit==1.35.0
-torch==2.3.0
-torchvision==0.18.0
-transformers==4.41.2
-monai==1.3.0
-scikit-learn==1.5.0
-matplotlib==3.9.0
-opencv-python==4.10.0.82
 Pillow==10.3.0
 numpy==1.26.4
-watchdog==4.0.0  # for file system monitoring (optional)
+scikit-learn==1.5.0
+matplotlib==3.9.0
+opencv-python-headless==4.9.0.80
+watchdog==4.0.0
