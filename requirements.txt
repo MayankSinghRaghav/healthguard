@@ -1,12 +1,13 @@
+# core web app dependencies
 streamlit==1.35.0
 fastapi==0.110.2
 uvicorn==0.29.0
-torch==2.2.2
-torchvision==0.17.2
-scikit-learn==1.4.2
-pandas==2.2.2
-numpy==1.26.4
-matplotlib==3.8.4
-opencv-python==4.9.0.80
-Pillow==10.3.0
-rich==14.0.0
+
+# compatible rich version (avoid conflict with Streamlit)
+rich==13.7.1
+
+# remove torch or use CPU-only lighter alt like torch==2.0.1+cpu from a wheel if required
+# torch==2.0.1
+
+# if you're using transformers, only include it if model is lightweight
+# transformers==4.41.1
