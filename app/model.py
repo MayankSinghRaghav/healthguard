@@ -1,16 +1,20 @@
-# app/model.py
-
 import torch
 import torch.nn as nn
 from transformers import ViTModel, ViTFeatureExtractor
+from PIL import Image
 
 # Load Hugging Face ViT and feature extractor globally
 feature_extractor = ViTFeatureExtractor.from_pretrained("google/vit-base-patch16-224-in21k")
+vit_model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
+vit_model.eval()
 
-def load_model():
-    model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
-    model.eval()
-    return model
+# Function to get ViT embedding from an input PIL image
+def get_vit_embedding(image: Image.Image) -> torch.Tensor:
+    inputs = feature_extractor(images=image, return_tensors="pt")
+    with torch.no_grad():
+        outputs = vit_model(**inputs)
+        embedding = outputs.last_hidden_state.mean(dim=1)  # Global average pooling
+    return embedding.squeeze()
 
 # Wrapper class to expose the final hidden states for Grad-CAM (simulate classification head)
 class WrapViT(nn.Module):

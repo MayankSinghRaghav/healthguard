@@ -7,6 +7,8 @@ from app.model import get_vit_embedding
 from app.autoencoder import ViTAutoencoder
 
 app = FastAPI()
+
+# Load trained autoencoder model
 model = ViTAutoencoder()
 model.load_state_dict(torch.load("models/autoencoder.pth", map_location=torch.device("cpu")))
 model.eval()
@@ -15,19 +17,18 @@ model.eval()
 async def predict(file: UploadFile = File(...)):
     try:
         contents = await file.read()
+        image = Image.open(BytesIO(contents)).convert("RGB")
 
-        # ✅ Save image to temp path for embedding function
-        temp_path = "temp_image.jpg"
-        with open(temp_path, "wb") as f:
-            f.write(contents)
+        # Extract ViT embedding
+        emb = get_vit_embedding(image).unsqueeze(0)  # Shape: (1, 768)
 
-        emb = get_vit_embedding(temp_path)
-
+        # Get reconstruction and compute anomaly score
         with torch.no_grad():
             recon = model(emb)
             loss = torch.nn.functional.mse_loss(recon, emb)
             score = loss.item()
 
+        # Threshold for anomaly
         threshold = 0.05
         is_anomaly = score > threshold
 
